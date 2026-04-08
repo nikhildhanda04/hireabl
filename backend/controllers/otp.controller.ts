@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
-import { sendOtp, verifyOtp } from '../services/otp.service.js'
-import { normalizePhone, isValidPhoneIndia, isValidOtp6 } from '../utils/phoneValidator.js'
-import { sendSuccess, sendError } from '../utils/response.js'
+import { sendOtp, verifyOtp } from '../services/otp.service'
+import { normalizePhone, isValidPhoneIndia, isValidOtp6 } from '../utils/phoneValidator'
+import { sendSuccess, sendError } from '../utils/response'
 
 export async function sendOtpController(req: Request, res: Response, next: NextFunction) {
   try {

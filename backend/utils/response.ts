@@ -6,10 +6,10 @@ export function sendSuccess(res: any, status: number, message: string, data?: an
   })
 }
 
-export function sendError(res: any, status: number, message: string, data?: any) {
+export function sendError(res: any, status: number, message: string, error?: any) {
   return res.status(status).json({
     success: false,
     message,
-    data,
+    error,
   })
 }

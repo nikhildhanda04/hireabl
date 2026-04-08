@@ -1,16 +1,14 @@
-import dotenv from 'dotenv'
-dotenv.config()
+import 'dotenv/config'
 
 import express, { Application } from 'express'
 import cors from 'cors'
 import session from 'express-session'
 import passport from 'passport'
 
-import { initPassport } from './services/passport.service.js'
-import authRoutes from './routes/auth.js'
-import otpRoutes from './routes/otp.js'
-import { notFound } from './middleware/notFound.js'
-import { errorHandler } from './middleware/errorHandler.js'
+import { initPassport } from './services/passport.service'
+import authRoutes from './routes/auth'
+import { notFound } from './middleware/notFound'
+import { errorHandler } from './middleware/errorHandler'
 
 const PORT = process.env.PORT || 5051
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'
@@ -28,7 +26,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'secretkey',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false },
+  cookie: { secure: process.env.NODE_ENV === 'production' },
 }))
 
 app.use(passport.initialize())
@@ -36,9 +34,10 @@ app.use(passport.session())
 
 initPassport(passport)
 
+// ── Routes ───────────────────────────────────────────────
 app.use('/api/v1/auth', authRoutes)
-app.use('/api/v1/auth', otpRoutes)
 
+// ── Error handling ───────────────────────────────────────
 app.use(notFound)
 app.use(errorHandler)
 

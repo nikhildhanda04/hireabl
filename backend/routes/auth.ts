@@ -1,32 +1,41 @@
 /**
- * routes/auth.js
+ * routes/auth.ts
  * ---------------
- * Thin router — only defines OAuth endpoints.
- * Zero business logic here; Passport middleware + controller handle everything.
+ * Unified auth router — all auth endpoints in one place.
  *
- * Mounted at: /api/v1/auth  (in server.js)
+ * Mounted at: /api/v1/auth (in server.ts)
  * Full paths:
- *   GET /api/v1/auth/google                → start Google OAuth flow
- *   GET /api/v1/auth/google/callback       → Google OAuth callback
- *   GET /api/v1/auth/microsoft             → start Microsoft OAuth flow
- *   GET /api/v1/auth/microsoft/callback    → Microsoft OAuth callback
- *   GET /api/v1/auth/oauth-debug           → show configured redirect URIs
+ *   POST /api/v1/auth/otp/send              → send OTP via Twilio
+ *   POST /api/v1/auth/otp/verify            → verify OTP
+ *   GET  /api/v1/auth/google                → start Google OAuth flow
+ *   GET  /api/v1/auth/google/callback       → Google OAuth callback
+ *   GET  /api/v1/auth/microsoft             → start Microsoft OAuth flow
+ *   GET  /api/v1/auth/microsoft/callback    → Microsoft OAuth callback
+ *   GET  /api/v1/auth/oauth-debug           → show configured redirect URIs
  */
 
-import express  from 'express'
+import express from 'express'
 import passport from 'passport'
 import {
   googleCallbackController,
   microsoftCallbackController,
   oauthDebugController,
-} from '../controllers/auth.controller.js'
+} from '../controllers/auth.controller'
+import {
+  sendOtpController,
+  verifyOtpController,
+} from '../controllers/otp.controller'
 
 const router = express.Router()
 
-// ── Debug ─────────────────────────────────────────────────────────────────────
+// ── OTP ───────────────────────────────────────────────────────
+router.post('/otp/send', sendOtpController)
+router.post('/otp/verify', verifyOtpController)
+
+// ── Debug ─────────────────────────────────────────────────────
 router.get('/oauth-debug', oauthDebugController)
 
-// ── Google OAuth ──────────────────────────────────────────────────────────────
+// ── Google OAuth ──────────────────────────────────────────────
 router.get('/google',
   passport.authenticate('google', { scope: ['profile', 'email'] }),
 )
@@ -36,7 +45,7 @@ router.get('/google/callback',
   googleCallbackController,
 )
 
-// ── Microsoft OAuth ───────────────────────────────────────────────────────────
+// ── Microsoft OAuth ───────────────────────────────────────────
 router.get('/microsoft',
   passport.authenticate('microsoft', { prompt: 'select_account' }),
 )

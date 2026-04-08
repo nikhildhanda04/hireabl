@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { GOOGLE_CALLBACK_URL, MICROSOFT_CALLBACK_URL } from '../services/passport.service.js'
+import { GOOGLE_CALLBACK_URL, MICROSOFT_CALLBACK_URL } from '../services/passport.service'
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'
 
